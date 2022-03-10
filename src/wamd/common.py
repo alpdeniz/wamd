@@ -135,13 +135,6 @@ class AuthState(Componentized):
                 'deviceSignature': base64.b64encode(self.signedDeviceIdentity['deviceSignature']).decode()
             }
 
-        for name, iface in _STORE_INTERFACES.items():
-            store = iface(self)
-            if IJsonSerializableStore.providedBy(store):
-                jsonStore = store.toJson()
-                if jsonStore:
-                    jsonDict[name] = jsonStore
-
         for k, v in self._authState.items():
             if k not in _INITIAL_ATTRIBUTES:
                 jsonDict[k] = v
