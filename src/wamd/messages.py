@@ -281,7 +281,8 @@ class LocationMessage(WhatsAppMessage):
 class ProtocolMessage(WhatsAppMessage):
     pass
 
-
+class ViewOnceMessage(WhatsAppMessage):
+    pass
 
 _MESSAGE_TYPE_CLASS_MAPS = {
     'imageMessage': MediaMessage,
@@ -296,7 +297,8 @@ _MESSAGE_TYPE_CLASS_MAPS = {
     'templateMessage': TemplateMessage,
     'stickerMessage': StickerMessage,
     'buttonsMessage': ButtonsMessage,
-    'templateButtonReplyMessage': TemplateButtonReplyMessage
+    'templateButtonReplyMessage': TemplateButtonReplyMessage,
+    'viewOnceMessage': ViewOnceMessage
 }
 
 _MEDIA_KEYS_MESSAGE = [
