@@ -532,6 +532,19 @@ class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
             })
         ))
 
+    def requestPicture(self, jid):
+        self.request(Node(
+            "iq", {
+                'id': self._generateMessageId(),
+                'to': jid,
+                'type': "get",
+                'xmlns': "w:profile:picture"
+            }, Node("picture", {
+                'query': 'url',
+                'type': 'image'
+            })
+        ), lambda node: self.fire("picture", self, node))
+        
     def sendMsg(self, message):
         # TODO
         # Implement queue/locking.
