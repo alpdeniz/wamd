@@ -190,6 +190,7 @@ class MessageHandler(NodeHandler):
             m.key.MergeFrom(messageKey)
             m.message.MergeFrom(messageProto)
             m.messageTimestamp = int(node['t'])
+            m.pushName = node['notify']
 
             if node['participant'] is not None:
                 m.participant = node['participant']

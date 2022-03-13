@@ -84,8 +84,8 @@ class WhatsAppMessage:
         if self['participant']:
             o += "%sParticipant: %s\n" % (indent, self['participant'])
 
-        if self['notify']:
-            o += "%sNotify: %s\n" % (indent, self['notify'])
+        if self['pushName']:
+            o += "%sPush Name: %s\n" % (indent, self['pushName'])
 
         o += "%sFromMe: %s\n" % (indent, self['fromMe'])
 
