@@ -136,13 +136,13 @@ class AuthState(Componentized):
             }
 
         for name, iface in _STORE_INTERFACES.items():
-            if iface not in [ '__MESSAGESTORE__']:
+            if name not in ['__GROUPSTORE__', '__MESSAGESTORE__']:
                 store = iface(self)
                 if IJsonSerializableStore.providedBy(store):
                     jsonStore = store.toJson()
                     if jsonStore:
                         jsonDict[name] = jsonStore
-                        
+
         for k, v in self._authState.items():
             if k not in _INITIAL_ATTRIBUTES:
                 jsonDict[k] = v
@@ -189,14 +189,15 @@ class AuthState(Componentized):
             }
 
         for name, iface in _STORE_INTERFACES.items():
-            store = iface(self)
-            if IJsonSerializableStore.providedBy(store):
-                try:
-                    jsonDictStore = jsonDict.pop(name)
-                except KeyError:
-                    pass
-                else:
-                    store.populate(jsonDictStore)
+            if name not in ['__GROUPSTORE__', '__MESSAGESTORE__']:
+                store = iface(self)
+                if IJsonSerializableStore.providedBy(store):
+                    try:
+                        jsonDictStore = jsonDict.pop(name)
+                    except KeyError:
+                        pass
+                    else:
+                        store.populate(jsonDictStore)
 
         for k, v in jsonDict.items():
             self[k] = v
