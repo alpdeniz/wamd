@@ -96,7 +96,7 @@ from .iface import (
 from .conn_utils import getUsyncDeviceList
 
 
-_VALID_EVENTS = ["qr", "close", "inbox", "receipt", "picture"]
+_VALID_EVENTS = ["qr", "close", "inbox", "receipt", "picture", "pushnames"]
 
 
 class MultiDeviceWhatsAppClient(WebSocketClientProtocol):

@@ -165,6 +165,10 @@ class MessageHandler(NodeHandler):
                             isRead = False
                         self._handleIncomingMessage(conn, webMessageInfoProto, isRead=isRead)
 
+        elif historySync.syncType == WAMessage_pb2.HistorySyncNotification.PUSH_NAME:
+            if historySync.pushnames:
+                conn.fire("pushnames", conn, historySync.pushnames)
+
     def _handleIncomingMessage(self, conn, messageProto, node=None, isRead=False):
         if not isinstance(messageProto, WAMessage_pb2.WebMessageInfo):
             messageKey = WAMessage_pb2.MessageKey()
