@@ -96,7 +96,7 @@ from .iface import (
 from .conn_utils import getUsyncDeviceList
 
 
-_VALID_EVENTS = ["qr", "close", "inbox", "receipt"]
+_VALID_EVENTS = ["qr", "close", "inbox", "receipt", "picture"]
 
 
 class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
@@ -483,13 +483,15 @@ class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
 
         self.sendMessage(payload, isBinary=True)
 
-    def request(self, node):
+    def request(self, node, callback=None):
         deferred = Deferred()
         try:
             self.sendMessageNode(node)
         except:
             deferred.errback(Failure())
         else:
+            if callback:
+                deferred.addCallback(callback)
             self._pendingRequest[node['id']] = deferred
         return deferred
 
@@ -544,7 +546,7 @@ class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
                 'type': 'image'
             })
         ), lambda node: self.fire("picture", self, node))
-        
+
     def sendMsg(self, message):
         # TODO
         # Implement queue/locking.
