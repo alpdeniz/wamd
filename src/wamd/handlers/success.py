@@ -54,6 +54,7 @@ class SuccessHandler(NodeHandler):
         ))
 
         groups = iqGroupResult.findChild("groups").findChilds("group")
+        conn.fire("groups", conn, groups)
 
         for group in groups:
             yield addGroupInfo(conn, group)
