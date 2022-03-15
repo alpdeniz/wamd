@@ -28,16 +28,17 @@ class SuccessHandler(NodeHandler):
             }, Node("active")))
 
         self.log.info("Logged in with: {user}", user=conn.authState.me['jid'])
+        
+        conn.factory.authSuccess(conn)
 
         if isFirstLogin:
             try:
-                yield self._maybeFetchAndStoreGroupInfo(conn)
+                groups = yield self._maybeFetchAndStoreGroupInfo(conn)
+                conn.fire("groups", conn, groups)
             except:
                 conn._sendLogOut()
                 conn._sendStreamEnd()
                 raise
-
-        conn.factory.authSuccess(conn)
 
     @inlineCallbacks
     def _maybeFetchAndStoreGroupInfo(self, conn):
@@ -53,8 +54,4 @@ class SuccessHandler(NodeHandler):
             ])
         ))
 
-        groups = iqGroupResult.findChild("groups").findChilds("group")
-        conn.fire("groups", conn, groups)
-
-        for group in groups:
-            yield addGroupInfo(conn, group)
+        return iqGroupResult.findChild("groups").findChilds("group")
