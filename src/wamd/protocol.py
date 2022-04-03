@@ -96,7 +96,7 @@ from .iface import (
 from .conn_utils import getUsyncDeviceList
 
 
-_VALID_EVENTS = ["qr", "close", "inbox", "receipt", "picture", "pushnames", "groups"]
+_VALID_EVENTS = ["qr", "close", "inbox", "receipt", "picture", "pushnames", "groups", "statuses", "bootstrap_event"]
 
 
 class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
@@ -381,7 +381,7 @@ class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
             appVersion.primary = 10
             companionProps.version.MergeFrom(appVersion)
             companionProps.platformType = 1
-            companionProps.requireFullSync = False
+            companionProps.requireFullSync = True
 
             signalStore = ISignalStore(self.authState)
 
