@@ -62,7 +62,7 @@ class AuthState(Componentized):
 
         self['noiseKey'] = curve.Curve.generateKeyPair()
         self['advSecretKey'] = os.urandom(32)
-        self['nextPreKeyId'] = 1
+        self['nextPreKeyId'] = 0
         self['serverHasPreKeys'] = False
 
         identityKeyPair = KeyHelper.generateIdentityKeyPair()
