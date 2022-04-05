@@ -185,7 +185,10 @@ class WhatsAppMessage:
         else:
             cls = ProtocolMessage
 
-        messageObj = cls(**attributes)
+        try:
+            messageObj = cls(**attributes)
+        except Exception as e:
+            print("Exception while parsing proto message", e, message, messageDict, "assigning protocol message")
 
         if message is not None:
             messageObj.populateFromMessage(message)
