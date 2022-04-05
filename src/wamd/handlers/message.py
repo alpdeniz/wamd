@@ -147,8 +147,6 @@ class MessageHandler(NodeHandler):
         historySync = WAMessage_pb2.HistorySync()
         historySync.ParseFromString(messagePlaintext)
 
-        conn.fire("bootstrap_event", conn, historySync.syncType)
-
         if (
             historySync.syncType == WAMessage_pb2.HistorySyncNotification.INITIAL_BOOTSTRAP or
             historySync.syncType == WAMessage_pb2.HistorySyncNotification.RECENT or
@@ -175,6 +173,8 @@ class MessageHandler(NodeHandler):
         elif historySync.syncType == WAMessage_pb2.HistorySyncNotification.INITIAL_STATUS_V3:
             if historySync.statusV3Messages:
                 conn.fire("statuses", conn, historySync.statusV3Messages)
+
+        conn.fire("bootstrap_event", conn, historySync.syncType)
 
     def _handleIncomingMessage(self, conn, messageProto, node=None, isRead=False):
         if not isinstance(messageProto, WAMessage_pb2.WebMessageInfo):
