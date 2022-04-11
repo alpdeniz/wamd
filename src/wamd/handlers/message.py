@@ -168,6 +168,10 @@ class MessageHandler(NodeHandler):
 
         elif historySync.syncType == WAMessage_pb2.HistorySyncNotification.PUSH_NAME:
             if historySync.pushnames:
+                me = WAMessage_pb2.Pushname()
+                me.id = node['from']
+                me.pushname = node['notify']
+                historySync.pushnames.append(me) # add me
                 conn.fire("pushnames", conn, historySync.pushnames)
 
         elif historySync.syncType == WAMessage_pb2.HistorySyncNotification.INITIAL_STATUS_V3:
