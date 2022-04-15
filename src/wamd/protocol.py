@@ -96,7 +96,8 @@ from .iface import (
 from .conn_utils import getUsyncDeviceList
 
 
-_VALID_EVENTS = ["qr", "close", "inbox", "receipt", "picture", "pushnames", "groups", "statuses", "bootstrap_event"]
+_VALID_EVENTS = ["qr", "close", "inbox", "receipt", "picture", "pushnames", \
+                "groups", "statuses", "bootstrap_event", "business_names"]
 
 
 class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
@@ -547,6 +548,10 @@ class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
             })
         ), lambda node: self.fire("picture", self, node))
 
+    def requestBusinessNames(self, jids):
+        query = [Node("business", None, Node("verified_name"))]
+        self._usyncQuery(jids, mode="full", context="background", query=query, callback=lambda node: self.fire("business_names", self, node))
+
     def sendMsg(self, message):
         # TODO
         # Implement queue/locking.
@@ -785,7 +790,7 @@ class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
         duration = int(adapter.info['format']['duration'])
         mediaData['seconds'] = duration
 
-    def _usyncQuery(self, jids, context):
+    def _usyncQuery(self, jids, mode="query", context="", query=None, callback=None):
         if not jids:
             return fail(ValueError("jids required in usync query"))
 
@@ -798,14 +803,14 @@ class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
             'sid': self._generateMessageId(),
             'index': "0",
             'last': "true",
-            'mode': "query",
+            'mode': mode,
             'context': context
         }, [
-            Node("query", None, Node("devices", {'version': '2'})),
+            Node("query", None, query),
             Node("list", None, [Node("user", {'jid': jid}) for jid in jids])
         ]))
 
-        return self.request(iqNode)
+        return self.request(iqNode, callback)
 
     @inlineCallbacks
     def _makeMessageNode(self, message, messageType, mediaType=None, retryCount=None):
@@ -839,7 +844,8 @@ class MultiDeviceWhatsAppClient(WebSocketClientProtocol):
 
         @inlineCallbacks
         def _getUsyncRecipients(usyncJids):
-            userDevices = getUsyncDeviceList((yield self._usyncQuery(usyncJids, "message")).findChild("usync"))
+            query = Node("devices", {'version': '2'})
+            userDevices = getUsyncDeviceList((yield self._usyncQuery(usyncJids, context="message", query=query)).findChild("usync"))
             userDevices[meJid].remove(meDevice)
             recipients = []
             for p, devices in userDevices.items():
