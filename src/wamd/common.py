@@ -66,7 +66,7 @@ class AuthState(Componentized):
         self['serverHasPreKeys'] = False
 
         identityKeyPair = KeyHelper.generateIdentityKeyPair()
-        signedPreKey = KeyHelper.generateSignedPreKey(identityKeyPair, 1)
+        signedPreKey = KeyHelper.generateSignedPreKey(identityKeyPair, 0)
         registrationId = KeyHelper.generateRegistrationId()
 
         signalStore = ISignalStore(self)
