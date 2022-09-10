@@ -182,15 +182,13 @@ class WhatsAppMessage:
                         else:
                             raise NotImplementedError("Message Type [%s] Not Implemented" % (messageType, ))
 
-        else:
-            cls = ProtocolMessage
-
         try:
             messageObj = cls(**attributes)
             if message is not None:
                 messageObj.populateFromMessage(message)
         except Exception as e:
-            print("Exception while parsing proto message", e, message, messageDict, "assigning protocol message")
+            messageObj = ProtocolMessage(**attributes)
+            print("Exception while parsing proto message, assigning protocol message. Error:", e, "Message:", message, "Dict:", messageDict)
 
         return messageObj
 
